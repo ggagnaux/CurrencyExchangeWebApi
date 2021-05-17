@@ -24,36 +24,61 @@ namespace CurrencyExchangeWebApi.Services
         /// <summary>
         /// TODO - Add Summary
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="_input"></param>
         /// <returns></returns>
-        public CurrencyExchangeOutputItem Calculate(CurrencyExchangeInputItem input)
+        public CurrencyExchangeOutputItem Calculate(CurrencyExchangeInputItem _input)
         {
-            var invoiceDate = input.InvoiceDate;
-            var preTaxAmount = input.PreTaxAmount;
-            var baseCurrency = input.BaseCurrency;
-            var paymentCurrency = input.PaymentCurrency;
-
-            Fixer.SetApiKey(Constants.FixerAPIKey);
-
-            // Get the amount after conversion
-            var preTaxTotal = Fixer.Convert(MapCurrencyType(baseCurrency), MapCurrencyType(paymentCurrency), Convert.ToDouble(preTaxAmount), invoiceDate);
-
-            // Get the Exchange rate on this particular date 
-            var rate = Fixer.Rate(MapCurrencyType(baseCurrency), MapCurrencyType(paymentCurrency), invoiceDate);
-
-            // Calculate the tax amount
-            var taxAmount = 1M;
-
-            // Calculate the grand total
-            var grandTotal = 2M;
-
-            return new CurrencyExchangeOutputItem
+            try
             {
-                ExchangeRate = Convert.ToDecimal(rate.Rate),
-                PreTaxTotal = Convert.ToDecimal(preTaxTotal),
-                TaxAmount = taxAmount,
-                GrandTotal = grandTotal
-            };
+                var invoiceDate = _input.InvoiceDate;
+                var preTaxAmount = _input.PreTaxAmount;
+                var baseCurrency = _input.BaseCurrency;
+                var paymentCurrency = _input.PaymentCurrency;
+
+                // TODO - Move this call elsewhere
+                // We only need to call it once at app startup.
+                Fixer.SetApiKey(Constants.FixerAPIKey);
+
+                // Get the amount after conversion and round off to two (2) decimal places
+                var preTaxTotal = Convert.ToDecimal(Fixer.Convert(MapCurrencyType(baseCurrency), 
+                                                                  MapCurrencyType(paymentCurrency), 
+                                                                  Convert.ToDouble(preTaxAmount), 
+                                                                  invoiceDate));
+                preTaxTotal = Decimal.Round(preTaxTotal, Constants.DecimalPlaces);
+
+                // Get the Exchange rate on this particular date 
+                var exchangeRate = Fixer.Rate(MapCurrencyType(baseCurrency), MapCurrencyType(paymentCurrency), invoiceDate);
+                var exchangeRateVal = Convert.ToDecimal(exchangeRate.Rate);
+
+                // Look up the tax rate
+                var taxRate = TaxRates.GetRateByCurrencyCode(paymentCurrency);
+
+                // Calculate the tax amount (preTaxAmount * taxRate) and round to two (2) decimal places)
+                var taxAmount = Decimal.Round(preTaxTotal * taxRate, Constants.DecimalPlaces);
+
+                // Calculate the grand total (preTaxTotal + taxAmount)
+                var grandTotal = Decimal.Round(preTaxTotal + taxAmount, Constants.DecimalPlaces);
+
+                return new CurrencyExchangeOutputItem
+                {
+                    Success = true,
+                    ExchangeRate = exchangeRateVal,
+                    PreTaxTotal = preTaxTotal,
+                    TaxAmount = taxAmount,
+                    GrandTotal = grandTotal
+                };
+            }
+            catch (Exception)
+            {
+                return new CurrencyExchangeOutputItem
+                {
+                    Success = false,
+                    ExchangeRate = 0M,
+                    PreTaxTotal = 0M,
+                    TaxAmount = 0M,
+                    GrandTotal = 0M
+                };
+            }
         }
         #endregion
 

@@ -16,8 +16,8 @@ namespace CurrencyExchangeWebApi.Utility
         public const string FixerAPIKey = "03364a1b87ee84f155cb7b334920b92c";
 
         /// <summary>
-        /// Fixer External API Url
+        /// TODO - Add Summary
         /// </summary>
-        public const string FixerAPIUrl = @"http://data.fixer.io/api/";
+        public const int DecimalPlaces = 2;
     }
 }

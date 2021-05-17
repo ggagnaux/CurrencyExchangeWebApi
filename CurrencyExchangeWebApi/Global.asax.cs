@@ -1,10 +1,6 @@
-using Swashbuckle.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+#region Namespaces
 using System.Web.Http;
-using System.Web.Routing;
+#endregion
 
 namespace CurrencyExchangeWebApi
 {
@@ -13,8 +9,6 @@ namespace CurrencyExchangeWebApi
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
-
-            //GlobalConfiguration.Configuration.EnableSwagger(c => c.SingleApiVersion("v1", "A title for your API")).EnableSwaggerUi();
         }
     }
 }

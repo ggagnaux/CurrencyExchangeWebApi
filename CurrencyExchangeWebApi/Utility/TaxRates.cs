@@ -8,44 +8,29 @@ namespace CurrencyExchangeWebApi.Utility
     /// <summary>
     /// TODO - Add Summary
     /// </summary>
-    public class TaxRates
+    class TaxRate
     {
-        #region Private Variables
-        private Dictionary<CurrencyCodeEnum, decimal> _rates;
-        #endregion
+        public CurrencyCodeEnum currencyCode;
+        public decimal rate;
+    }
 
-        #region Constructor(s)
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TaxRates()
-        {
-            _rates = new Dictionary<CurrencyCodeEnum, decimal>();
-            _rates.Add(CurrencyCodeEnum.CDN, 0.11M);
-            _rates.Add(CurrencyCodeEnum.USD, 0.10M);
-            _rates.Add(CurrencyCodeEnum.EUR, 0.09M);
-        }
-        #endregion
-
-        #region Public Methods
-        /// <summary>
-        /// TODO - Add Summary
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<CurrencyCodeEnum, decimal> GetRates()
-        {
-            return _rates;
-        }
+    public static class TaxRates
+    {
+        // Build the rates lookup table
+        static List<TaxRate> _rates = new List<TaxRate> {
+            new TaxRate { currencyCode = CurrencyCodeEnum.CDN, rate = 0.11M },
+            new TaxRate { currencyCode = CurrencyCodeEnum.USD, rate = 0.10M },
+            new TaxRate { currencyCode = CurrencyCodeEnum.EUR, rate = 0.09M },
+        };
 
         /// <summary>
         /// TODO - Add Summary
         /// </summary>
         /// <param name="currencyCode"></param>
         /// <returns></returns>
-        public decimal GetRateByCurrencyCode(CurrencyCodeEnum currencyCode)
+        public static decimal GetRateByCurrencyCode(CurrencyCodeEnum currencyCode)
         {
-            return _rates.FirstOrDefault(t => t.Key == currencyCode).Value;
+            return _rates.FirstOrDefault(t => t.currencyCode == currencyCode).rate;
         }
-        #endregion
     }
 }

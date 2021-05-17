@@ -8,6 +8,9 @@ using System.Web.Http;
 
 namespace CurrencyExchangeWebApi.Configuration
 {
+    /// <summary>
+    /// TODO - Add Summary
+    /// </summary>
     public static class CurrencyExchangeWebApiConfig
     {
         public static void Register(HttpConfiguration config)

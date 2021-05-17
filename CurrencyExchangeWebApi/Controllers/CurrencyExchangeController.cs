@@ -12,6 +12,9 @@ using System.Web.Http;
 
 namespace CurrencyExchangeWebApi.Controllers
 {
+    /// <summary>
+    /// TODO - Add Summary
+    /// </summary>
     public class CurrencyExchangeController : ApiController
     {
         /// <summary>
@@ -25,6 +28,9 @@ namespace CurrencyExchangeWebApi.Controllers
         [HttpGet]
         public CurrencyExchangeOutputItem Calculate(DateTime _invoiceDate, decimal _preTaxAmount, CurrencyCodeEnum _baseCurrency, CurrencyCodeEnum _paymentCurrency)
         {
+            // TODO - Validate all incoming data
+            // For now, the happy path is assumed.
+
             var service = new CurrencyExchangeService();
 
             var input = new CurrencyExchangeInputItem

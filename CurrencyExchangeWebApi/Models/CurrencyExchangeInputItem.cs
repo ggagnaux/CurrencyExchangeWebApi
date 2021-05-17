@@ -8,7 +8,9 @@ using System.Web;
 
 namespace CurrencyExchangeWebApi.Models
 {
-    
+    /// <summary>
+    /// TODO - Add Summary
+    /// </summary>
     public class CurrencyExchangeInputItem
     {
         /// <summary>
